@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Litauisch in 1 Stunde</title>
+<meta name="description" content="Geführter Offline-Kurs: grüßen, danken, bestellen, bezahlen auf Litauisch.">
+<meta name="theme-color" content="#006a44">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Litauisch">
+<style>
+:root {
+  --yellow: #fdb913;
+  --green: #006a44;
+  --red: #c1272d;
+  --bg: #f6f4ee;
+  --surface: #ffffff;
+  --surface-2: #efece3;
+  --text: #1b1f1c;
+  --muted: #5d655f;
+  --border: #dcd8cc;
+  --accent: #006a44;
+  --accent-text: #ffffff;
+  --ok-bg: #dff3e8;
+  --ok: #006a44;
+  --bad-bg: #fbe3e4;
+  --bad: #a51f25;
+  --shadow: 0 2px 10px rgba(0,0,0,.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101412;
+    --surface: #1a201d;
+    --surface-2: #232b27;
+    --text: #eef1ef;
+    --muted: #a3ada7;
+    --border: #2f3934;
+    --accent: #1f9a6a;
+    --accent-text: #ffffff;
+    --ok-bg: #12382a;
+    --ok: #5fd3a2;
+    --bad-bg: #3d1719;
+    --bad: #ff8c90;
+    --shadow: 0 2px 10px rgba(0,0,0,.4);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+button { font: inherit; color: inherit; }
+.flag { display: flex; height: 6px; }
+.flag span { flex: 1; }
+header.top {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding-top: env(safe-area-inset-top);
+}
+.top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px 0; }
+.title-row { display: flex; align-items: center; gap: 10px; }
+.title-row img { width: 30px; height: 30px; border-radius: 7px; }
+.title-row h1 { font-size: 19px; margin: 0; flex: 1; }
+.progress-label { font-size: 14px; color: var(--muted); margin: 8px 0 4px; display: flex; justify-content: space-between; }
+.bar { height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.bar > div { height: 100%; background: linear-gradient(90deg, var(--yellow), var(--green) 60%, var(--red)); border-radius: 99px; transition: width .4s; }
+nav.tabs { display: flex; gap: 6px; margin-top: 10px; }
+nav.tabs button {
+  flex: 1; border: 0; background: none; padding: 10px 0 12px;
+  font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer;
+}
+nav.tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--yellow); }
+main { flex: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 16px 16px 24px; }
+footer {
+  text-align: center; font-size: 14px; color: var(--muted);
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+}
+footer .ok { color: var(--ok); font-weight: 600; }
+footer button { border: 0; background: none; color: var(--muted); text-decoration: underline; padding: 8px; cursor: pointer; font-size: 14px; }
+
+.btn {
+  display: block; width: 100%; min-height: 56px; padding: 14px 18px;
+  border-radius: 14px; border: 0; background: var(--accent); color: var(--accent-text);
+  font-weight: 700; font-size: 18px; cursor: pointer; margin-top: 14px;
+}
+.btn.secondary { background: var(--surface-2); color: var(--text); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn:active:not(:disabled) { transform: scale(.98); }
+
+.lesson-list { display: grid; gap: 10px; }
+.lesson {
+  display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 14px 16px; min-height: 72px; cursor: pointer; box-shadow: var(--shadow);
+}
+.lesson .em { font-size: 28px; width: 36px; text-align: center; }
+.lesson .t { flex: 1; }
+.lesson .t small { display: block; color: var(--muted); font-size: 14px; }
+.lesson .st { font-size: 22px; }
+.lesson.locked { opacity: .5; cursor: default; box-shadow: none; }
+.lesson.done { border-color: var(--green); }
+.lesson.bonus { border: 2px dashed var(--red); }
+.section-h { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 22px 0 8px; }
+
+.steps { display: flex; gap: 6px; margin-bottom: 14px; }
+.steps span {
+  flex: 1; text-align: center; font-size: 13px; font-weight: 600; padding: 6px 0;
+  border-radius: 99px; background: var(--surface-2); color: var(--muted);
+}
+.steps span.on { background: var(--yellow); color: #1b1f1c; }
+.steps span.past { background: var(--ok-bg); color: var(--ok); }
+.lesson-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.lesson-head h2 { margin: 0; font-size: 20px; flex: 1; }
+.back { border: 0; background: var(--surface-2); border-radius: 10px; padding: 8px 12px; cursor: pointer; font-weight: 600; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  box-shadow: var(--shadow); padding: 22px 20px; min-height: 260px;
+  display: flex; flex-direction: column; justify-content: center; text-align: center;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.card .de { font-size: 22px; font-weight: 600; }
+.card .hint { margin-top: 18px; color: var(--muted); font-size: 15px; }
+.card .lt { font-size: 30px; font-weight: 800; color: var(--accent); margin-top: 18px; line-height: 1.2; }
+.card .ph { font-size: 19px; margin-top: 6px; letter-spacing: .02em; }
+.card .tip {
+  margin-top: 18px; text-align: left; background: var(--surface-2); border-left: 4px solid var(--yellow);
+  border-radius: 10px; padding: 10px 12px; font-size: 15px;
+}
+.card .tag { align-self: center; font-size: 12px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.counter { text-align: center; color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+.row { display: flex; gap: 10px; }
+.row .btn { flex: 1; }
+
+.q { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); text-align: center; }
+.q .ask { color: var(--muted); font-size: 15px; }
+.q .term { font-size: 26px; font-weight: 800; margin-top: 6px; }
+.opts { display: grid; gap: 10px; margin-top: 14px; }
+.opt {
+  min-height: 58px; padding: 12px 16px; border-radius: 14px; text-align: left;
+  border: 2px solid var(--border); background: var(--surface); cursor: pointer; font-size: 17px; font-weight: 600;
+}
+.opt small { display: block; font-weight: 400; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt:disabled { cursor: default; }
+.feedback { margin-top: 14px; padding: 12px 14px; border-radius: 14px; font-size: 16px; }
+.feedback.ok { background: var(--ok-bg); color: var(--ok); }
+.feedback.bad { background: var(--bad-bg); color: var(--bad); }
+.feedback b { color: var(--text); }
+.shake { animation: shake .35s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+.scene { background: var(--surface-2); border-radius: 14px; padding: 12px 14px; font-size: 15px; margin-bottom: 12px; }
+.chat { display: flex; flex-direction: column; gap: 8px; margin-bottom: 6px; }
+.bubble { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 17px; }
+.bubble small { display: block; font-size: 13px; opacity: .8; margin-top: 2px; }
+.bubble .who { font-size: 12px; font-weight: 700; opacity: .75; display: block; margin-bottom: 2px; }
+.bubble.them { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 6px; }
+.bubble.me { align-self: flex-end; background: var(--accent); color: var(--accent-text); border-bottom-right-radius: 6px; }
+.narr { align-self: center; font-size: 14px; color: var(--muted); font-style: italic; text-align: center; padding: 2px 10px; }
+
+.done-box { text-align: center; padding: 26px 10px; }
+.done-box .big { font-size: 64px; }
+.done-box h2 { margin: 8px 0; }
+
+.cheat h2 { font-size: 18px; margin: 24px 0 8px; }
+.rules { background: var(--surface); border: 2px solid var(--yellow); border-radius: 16px; padding: 14px 16px; }
+.rules h2 { margin: 0 0 8px; }
+.rules ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 15px; }
+.rules li b { color: var(--accent); }
+.rules .wide { grid-column: 1 / -1; }
+.tipbox { margin-top: 12px; background: var(--ok-bg); border-radius: 12px; padding: 10px 12px; font-size: 15px; }
+.phrase { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin-bottom: 6px; }
+.phrase .l { font-weight: 700; font-size: 18px; color: var(--accent); }
+.phrase .p { font-size: 14px; color: var(--muted); }
+.phrase .d { font-size: 15px; }
+.phrase.understand { border-style: dashed; }
+.cheat .sub { font-size: 14px; font-weight: 700; color: var(--red); margin: 12px 0 6px; }
+.update {
+  position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 10;
+  max-width: 600px; margin: 0 auto; background: var(--text); color: var(--bg); border: 0;
+  border-radius: 14px; padding: 14px 16px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow);
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="flag" aria-hidden="true"><span style="background:#fdb913"></span><span style="background:#006a44"></span><span style="background:#c1272d"></span></div>
+  <div class="top-inner">
+    <div class="title-row">
+      <img src="icon.svg" alt="">
+      <h1>Litauisch in 1 Stunde</h1>
+    </div>
+    <div class="progress-label"><span id="progress-text">Lektion 1 von 6</span><span id="progress-count"></span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="6" id="bar"><div id="bar-fill" style="width:0%"></div></div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" id="tab-course" aria-selected="true">Kurs</button>
+      <button role="tab" id="tab-cheat" aria-selected="false">Spickzettel</button>
+    </nav>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <div id="offline-status">Offline-Modus wird vorbereitet …</div>
+  <button id="reset">Fortschritt zurücksetzen</button>
+</footer>
+
+<script>
+'use strict';
+
+/* ---------- Inhalte ---------- */
+
+const LESSONS = [
+  {
+    id: 1, emoji: '👋', title: 'Hallo & Tschüss',
+    items: [
+      { lt: 'Labas', de: 'Hallo', ph: 'LA-bas', tip: '„Labas“ = lässig. Für Gleichaltrige, Bar, Hostel.' },
+      { lt: 'Laba diena', de: 'Guten Tag (höflich, immer passend)', ph: 'LA-ba dje-NA', tip: '„diena“ klingt wie „Dienstag“, also ein guter Tag. Passt von morgens bis abends, bei allen.' },
+      { lt: 'Viso gero', de: 'Auf Wiedersehen', ph: 'WI-so GÄ-ro', tip: 'Wörtlich „alles Gute“. Denk an „Wieso gehen? Weil’s gut war!“' },
+      { lt: 'Iki', de: 'Tschüss', ph: 'I-ki', tip: 'Kurz wie „Tschü“. Eigentlich „bis …“, wie „bis später“.' }
+    ],
+    dialog: {
+      scene: 'Du kommst morgens im Hotel an.',
+      steps: [
+        { who: 'Rezeption', lt: 'Laba diena!', de: 'Guten Tag!', ask: 'Was antwortest du höflich?',
+          options: [['Laba diena!', 'Guten Tag!'], ['Iki!', 'Tschüss!'], ['Viso gero!', 'Auf Wiedersehen!']], answer: 0,
+          fb: 'Mit „Laba diena“ liegst du nie falsch.' },
+        { narr: 'Zwei Tage später checkst du aus und gehst zur Tür.', ask: 'Was sagst du zur Rezeption?',
+          options: [['Viso gero!', 'Auf Wiedersehen!'], ['Labas!', 'Hallo!'], ['Laba diena!', 'Guten Tag!']], answer: 0,
+          fb: 'Höflicher Abschied: „Viso gero“.' },
+        { who: 'Typ im Hostel', lt: 'Labas!', de: 'Hallo!', ask: 'Ein Typ in deinem Alter grüßt dich locker. Du antwortest:',
+          options: [['Labas!', 'Hallo!'], ['Viso gero!', 'Auf Wiedersehen!'], ['Iki!', 'Tschüss!']], answer: 0 },
+        { who: 'Typ im Hostel', lt: 'Iki!', de: 'Tschüss!', ask: 'Er geht. Du sagst locker:',
+          options: [['Iki!', 'Tschüss!'], ['Laba diena!', 'Guten Tag!'], ['Labas!', 'Hallo!']], answer: 0 }
+      ]
+    }
+  },
+  {
+    id: 2, emoji: '🙏', title: 'Danke & Bitte',
+    items: [
+      { lt: 'Ačiū', de: 'Danke', ph: 'A-tschu', tip: 'Klingt wie Niesen: „Hatschu!“ Danke! (Gesundheit!)' },
+      { lt: 'Labai ačiū', de: 'Vielen Dank', ph: 'la-BAI A-tschu', tip: '„labai“ = sehr. Sehr + Niesen = vielen Dank.' },
+      { lt: 'Prašau', de: 'Bitte (beim Bitten UND als „Bitte sehr“)', ph: 'pra-SCHAU', tip: '„Pra-SCHAU“, wie „schau, bitte!“. Beim Bestellen und beim Überreichen.' },
+      { lt: 'Atsiprašau', de: 'Entschuldigung', ph: 'at-si-pra-SCHAU', tip: 'Da steckt „prašau“ drin: ein großes Bitte = Entschuldigung.' }
+    ],
+    dialog: {
+      scene: 'In der Bäckerei in der Altstadt.',
+      steps: [
+        { narr: 'Du zeigst auf ein Gebäck in der Vitrine.', ask: 'Was sagst du dazu?',
+          options: [['Prašau.', 'Bitte.'], ['Ačiū.', 'Danke.'], ['Atsiprašau.', 'Entschuldigung.']], answer: 0,
+          fb: '„Prašau“ benutzt du auch, wenn du um etwas bittest.' },
+        { who: 'Verkäuferin', lt: 'Prašau.', de: 'Bitte sehr.', ask: 'Sie gibt dir das Gebäck. Du sagst:',
+          options: [['Ačiū!', 'Danke!'], ['Prašau!', 'Bitte!'], ['Iki!', 'Tschüss!']], answer: 0 },
+        { narr: 'Beim Rausgehen rempelst du jemanden an.', ask: 'Was sagst du?',
+          options: [['Atsiprašau!', 'Entschuldigung!'], ['Ačiū!', 'Danke!'], ['Labas!', 'Hallo!']], answer: 0 },
+        { narr: 'Die Person hebt dir freundlich deine Tüte auf.', ask: 'Du bedankst dich herzlich:',
+          options: [['Labai ačiū!', 'Vielen Dank!'], ['Atsiprašau!', 'Entschuldigung!'], ['Prašau!', 'Bitte!']], answer: 0 }
+      ]
+    }
+  },
+  {
+    id: 3, emoji: '🇬🇧', title: 'Ja, Nein & auf Englisch wechseln',
+    items: [
+      { lt: 'Taip', de: 'Ja', ph: 'taip', tip: '„Taip“ wie „Typ, genau!“, also ja.' },
+      { lt: 'Ne', de: 'Nein', ph: 'nä', tip: 'Wie unser „nee“.' },
+      { lt: 'Ar kalbate angliškai?', de: 'Sprechen Sie Englisch?', ph: 'ar KAL-ba-te ANG-lisch-kai', tip: '„Ar“ startet jede Ja/Nein-Frage. „angliškai“ klingt nach „anglisch“. Dein Rettungssatz!' },
+      { lt: 'Nesuprantu', de: 'Ich verstehe nicht', ph: 'nä-su-pran-TU', tip: '„ne“ = nicht. Stell dir vor: „Nee, sorry, ich prantu nix.“' }
+    ],
+    dialog: {
+      scene: 'Am Kiosk am Bahnhof.',
+      steps: [
+        { who: 'Verkäufer', lt: 'Labas! Ar norite maišelio, ar ne?', de: '(sehr schnell) Hallo! Möchten Sie eine Tüte oder nicht?', hideDe: true, ask: 'Er redet schnell. Du verstehst nur Bahnhof. Was sagst du?',
+          options: [['Nesuprantu.', 'Ich verstehe nicht.'], ['Taip.', 'Ja.'], ['Viso gero.', 'Auf Wiedersehen.']], answer: 0,
+          fb: 'Ehrlich ist am besten. Danach direkt auf Englisch wechseln.' },
+        { ask: 'Jetzt wechselst du höflich auf Englisch:',
+          options: [['Ar kalbate angliškai?', 'Sprechen Sie Englisch?'], ['Kur yra tualetas?', 'Wo ist die Toilette?'], ['Atsiprašau.', 'Entschuldigung.']], answer: 0 },
+        { who: 'Verkäufer', lt: 'Taip!', de: 'Ja!', ask: 'Was hat er gesagt?', mode: 'de',
+          options: [['Ja!', ''], ['Nein!', ''], ['Ich verstehe nicht.', '']], answer: 0 },
+        { who: 'Verkäufer', lt: 'Plastic bag?', de: 'Plastiktüte?', ask: 'Du brauchst keine Tüte. Du sagst:',
+          options: [['Ne, ačiū.', 'Nein, danke.'], ['Taip, prašau.', 'Ja, bitte.'], ['Labas.', 'Hallo.']], answer: 0,
+          fb: 'Ein „Ne, ačiū“ kommt auch mitten im Englischen gut an.' }
+      ]
+    }
+  },
+  {
+    id: 4, emoji: '💶', title: 'Einkaufen & Bezahlen',
+    items: [
+      { lt: 'Kiek kainuoja?', de: 'Was kostet das?', ph: 'kjek kai-NUO-ja', tip: '„Kiek?“ = wie viel? Zeig dabei einfach auf die Sache.' },
+      { lt: 'Sąskaitą, prašau', de: 'Die Rechnung, bitte', ph: 'SAAS-kai-ta, pra-SCHAU', tip: '„Saas-Kai-ta“: nach dem Essen sagst du „Saas“, und es kommt die Rechnung.' },
+      { lt: 'Ar galiu mokėti kortele?', de: 'Kann ich mit Karte zahlen?', ph: 'ar ga-LJU mo-KEE-ti kor-tä-LÄ', tip: '„kortele“ ≈ Karte. „galiu“ = ich kann. Klappt fast überall.' },
+      { lt: 'Eurai', de: 'Euro', ph: 'ÄU-rai', tip: 'Fast wie „Euro“. Litauen zahlt mit Euro, auf Schildern steht „Eur“.' }
+    ],
+    dialog: {
+      scene: 'Am Bernstein-Stand auf dem Markt.',
+      steps: [
+        { narr: 'Dir gefällt eine Kette.', ask: 'Du zeigst darauf und fragst:',
+          options: [['Kiek kainuoja?', 'Was kostet das?'], ['Sąskaitą, prašau.', 'Die Rechnung, bitte.'], ['Kur yra tualetas?', 'Wo ist die Toilette?']], answer: 0 },
+        { who: 'Verkäuferin', lt: 'Dvidešimt eurų.', de: 'Zwanzig Euro.', ask: 'Woran erkennst du, dass es um Geld geht?', mode: 'de',
+          options: [['„eurų“ = Euro', ''], ['„Dvi“ = danke', ''], ['Gar nicht', '']], answer: 0,
+          fb: 'Zahlen bekommst du notfalls auf dem Display gezeigt. „eurų“ ist das Signal.' },
+        { ask: 'Du hast kein Bargeld. Du fragst:',
+          options: [['Ar galiu mokėti kortele?', 'Kann ich mit Karte zahlen?'], ['Ar kalbate angliškai?', 'Sprechen Sie Englisch?'], ['Kiek kainuoja?', 'Was kostet das?']], answer: 0 },
+        { who: 'Verkäuferin', lt: 'Taip, prašau.', de: 'Ja, bitte.', ask: 'Bezahlt. Du sagst:',
+          options: [['Ačiū!', 'Danke!'], ['Nesuprantu.', 'Ich verstehe nicht.'], ['Ne.', 'Nein.']], answer: 0 },
+        { narr: 'Abends im Restaurant: Du hast fertig gegessen.', ask: 'Du winkst der Kellnerin und sagst:',
+          options: [['Sąskaitą, prašau.', 'Die Rechnung, bitte.'], ['Vieną kavą, prašau.', 'Einen Kaffee, bitte.'], ['Kiek kainuoja?', 'Was kostet das?']], answer: 0 }
+      ]
+    }
+  },
+  {
+    id: 5, emoji: '🍺', title: 'Bestellen',
+    items: [
+      { lt: 'Vieną alų, prašau', de: 'Ein Bier, bitte', ph: 'WJE-na A-lu, pra-SCHAU', tip: '„alų“ wie englisch „Ale“. „Vieną“ = eins.' },
+      { lt: 'Vieną kavą, prašau', de: 'Einen Kaffee, bitte', ph: 'WJE-na KA-wa, pra-SCHAU', tip: '„kava“ = Kaffee, fast gleich. Muster: Vieną … , prašau.' },
+      { lt: 'Vandens, prašau', de: 'Wasser, bitte', ph: 'wan-DÄNS, pra-SCHAU', tip: '„Vandens“ klingt nach „Wanne“, und in die Wanne gehört Wasser.' },
+      { lt: 'Į sveikatą!', de: 'Prost!', ph: 'i swej-KA-ta', tip: 'Wörtlich „auf die Gesundheit“. Beim Anstoßen in die Augen schauen.' }
+    ],
+    dialog: {
+      scene: 'Im Café, nachmittags.',
+      steps: [
+        { who: 'Kellner', lt: 'Laba diena! Ką užsakysite?', de: 'Guten Tag! Was darf es sein?', ask: 'Du willst einen Kaffee:',
+          options: [['Vieną kavą, prašau.', 'Einen Kaffee, bitte.'], ['Vieną alų, prašau.', 'Ein Bier, bitte.'], ['Sąskaitą, prašau.', 'Die Rechnung, bitte.']], answer: 0 },
+        { who: 'Kellner', lt: 'Dar ko nors?', de: 'Sonst noch etwas?', ask: 'Du möchtest noch Wasser:',
+          options: [['Vandens, prašau.', 'Wasser, bitte.'], ['Į sveikatą!', 'Prost!'], ['Iki!', 'Tschüss!']], answer: 0 },
+        { narr: 'Abends in der Bar. Der Barkeeper schaut dich an.', ask: 'Du bestellst ein Bier:',
+          options: [['Vieną alų, prašau.', 'Ein Bier, bitte.'], ['Vandens, prašau.', 'Wasser, bitte.'], ['Vieną kavą, prašau.', 'Einen Kaffee, bitte.']], answer: 0 },
+        { narr: 'Litauer am Nebentisch heben die Gläser.', ask: 'Du stößt mit an:',
+          options: [['Į sveikatą!', 'Prost!'], ['Atsiprašau!', 'Entschuldigung!'], ['Viso gero!', 'Auf Wiedersehen!']], answer: 0 }
+      ]
+    }
+  },
+  {
+    id: 6, emoji: '🧭', title: 'Zurechtfinden + Zahlen 1–5',
+    items: [
+      { lt: 'Kur yra tualetas?', de: 'Wo ist die Toilette?', ph: 'kur ie-RA tu-a-LÄ-tas', tip: '„tualetas“ = Toilette mit litauischem „-as“. „Kur?“ = wo?' },
+      { lt: 'Gerai', de: 'Okay / Gut', ph: 'gä-RAI', tip: 'Verwandt mit „Viso gero“. Dein Allzweck-„Passt!“.' },
+      { lt: 'vienas', de: '1 (eins)', ph: 'WJE-nas', tip: 'Wie in „Vieną alų“, also ein Bier.' },
+      { lt: 'du', de: '2 (zwei)', ph: 'du', tip: '„Du und ich“, das sind zwei.' },
+      { lt: 'trys', de: '3 (drei)', ph: 'tries', tip: '„trys“ ≈ „drei“ ≈ englisch „three“.' },
+      { lt: 'keturi', de: '4 (vier)', ph: 'kä-tu-RI', tip: 'Ähnlich wie lateinisch „quattuor“: vier Kater.' },
+      { lt: 'penki', de: '5 (fünf)', ph: 'pän-KI', tip: '„Pinke-Pinke“ zählst du mit fünf Fingern. Griechisch: „pente“.' }
+    ],
+    dialog: {
+      scene: 'Am Eingang eines Restaurants.',
+      steps: [
+        { who: 'Kellnerin', lt: 'Laba diena! Kiek žmonių?', de: 'Guten Tag! Wie viele Personen?', ask: 'Ihr seid zu zweit. Du sagst:',
+          options: [['Du.', 'Zwei.'], ['Trys.', 'Drei.'], ['Vienas.', 'Eins.']], answer: 0 },
+        { who: 'Kellnerin', lt: 'Prašau, staliukas numeris penki.', de: 'Bitte, Tisch Nummer fünf.', ask: 'Welcher Tisch ist es?', mode: 'de',
+          options: [['Tisch 5', ''], ['Tisch 4', ''], ['Tisch 3', '']], answer: 0 },
+        { narr: 'Vor dem Essen willst du dir die Hände waschen.', ask: 'Du fragst die Kellnerin:',
+          options: [['Kur yra tualetas?', 'Wo ist die Toilette?'], ['Kiek kainuoja?', 'Was kostet das?'], ['Ar tu iš čia?', 'Bist du von hier?']], answer: 0 },
+        { who: 'Kellnerin', lt: 'Ten, dešinėje.', de: 'Dort, rechts.', ask: 'Sie zeigt nach rechts. Du sagst:',
+          options: [['Ačiū!', 'Danke!'], ['Keturi!', 'Vier!'], ['Ne!', 'Nein!']], answer: 0 },
+        { who: 'Kellnerin', lt: 'Vieną alų ir vandens?', de: 'Ein Bier und Wasser?', ask: 'Passt genau so. Du sagst:',
+          options: [['Gerai!', 'Okay!'], ['Nesuprantu.', 'Ich verstehe nicht.'], ['Penki.', 'Fünf.']], answer: 0 }
+      ]
+    }
+  },
+  {
+    id: 7, emoji: '🍸', title: 'Flirten in der Bar', bonus: true,
+    items: [
+      { group: 'Ansprechen', lt: 'Labas! Kaip tave vardu?', de: 'Hallo! Wie heißt du?', ph: 'LA-bas! kaip ta-WÄ WAR-du', tip: '„vardu“ ≈ „Wort“: Welches Wort ist dein Name? Locker mit „Labas“, nicht mit „Laba diena“.' },
+      { group: 'Ansprechen', lt: 'Mano vardas Laurin', de: 'Ich heiße Laurin', ph: 'MA-no WAR-das Laurin', tip: '„Mano“ = mein. Mein Name ist Laurin. Gleiches „vard-“ wie in der Frage.' },
+      { group: 'Ansprechen', lt: 'Malonu susipažinti', de: 'Freut mich, dich kennenzulernen', ph: 'ma-lo-NU su-si-pa-SCHIN-ti', tip: '„Malonu“ heißt „angenehm“. Wenn der Rest hakt, reicht auch nur „Malonu!“ mit einem Lächeln.' },
+      { group: 'Ansprechen', lt: 'Ar tu iš čia?', de: 'Bist du von hier?', ph: 'ar tu isch TSCHA', tip: '„Ar“ startet die Frage (wie in Lektion 3). „iš čia“ = von hier.' },
+      { group: 'Ansprechen', lt: 'Aš iš Vokietijos', de: 'Ich bin aus Deutschland', ph: 'asch isch wo-kje-ti-JOS', tip: '„Aš“ = ich, „iš“ = aus. Vokietija = Deutschland.' },
+      { group: 'Ansprechen', lt: 'Mano lietuvių kalba labai bloga 😅', de: 'Mein Litauisch ist sehr schlecht', ph: 'MA-no lje-TU-wju kal-BA la-BAI BLO-ga', tip: 'Der beste Eisbrecher. Dass du es überhaupt versuchst, kommt gut an. Danach ruhig auf Englisch weitermachen: „Ar kalbate angliškai?“' },
+      { group: 'Komplimente & Einladung', lt: 'Tu turi gražią šypseną', de: 'Du hast ein schönes Lächeln', ph: 'tu tu-RI GRA-schja SCHIEP-sä-na', tip: '„šypsena“ = Lächeln. Ein Kompliment fürs Lächeln wirkt charmant, nicht plump.' },
+      { group: 'Komplimente & Einladung', lt: 'Tu labai graži', de: 'Du bist sehr hübsch', ph: 'tu la-BAI gra-SCHI', tip: '„labai“ kennst du aus „labai ačiū“. „graži“ = hübsch. Sparsam einsetzen.' },
+      { group: 'Komplimente & Einladung', lt: 'Ar galiu tau nupirkti gėrimą?', de: 'Darf ich dir einen Drink ausgeben?', ph: 'ar ga-LJU tau nu-PIRK-ti GEE-ri-ma', tip: '„Ar galiu …“ kennst du vom Kartenzahlen. „gėrimas“ = Getränk.' },
+      { group: 'Komplimente & Einladung', lt: 'Ar nori šokti?', de: 'Möchtest du tanzen?', ph: 'ar NO-ri SCHOK-ti', tip: '„šokti“ = tanzen. Merk dir: auf der Tanzfläche gibt’s den Schock-Tanz.' },
+      { group: 'Komplimente & Einladung', lt: 'Koks tavo Instagramas?', de: 'Was ist dein Instagram?', ph: 'koks TA-wo ins-ta-GRA-mas', tip: 'Litauisch hängt gern „-as“ an: Instagram-as. „tavo“ = dein.' },
+      { group: 'Komplimente & Einladung', lt: 'Gal susitiksim rytoj?', de: 'Treffen wir uns morgen?', ph: 'gal su-si-TIK-sim rie-TOJ', tip: '„rytoj“ = morgen. „Gal …?“ = vielleicht …? Klingt locker, nicht fordernd.' },
+      { group: 'Ihre Antworten verstehen', understand: true, lt: 'Taip, mielai!', de: 'Ja, gerne!', ph: 'taip, mje-LAI', tip: '„mielai“ hängt mit „lieb“ zusammen, also gerne. Das willst du hören! 🎉' },
+      { group: 'Ihre Antworten verstehen', understand: true, lt: 'Ne, ačiū', de: 'Nein, danke', ph: 'nä, A-tschu', tip: 'Lächeln, „Gero vakaro!“ sagen und weitergehen. Das ist souverän.' },
+      { group: 'Ihre Antworten verstehen', understand: true, lt: 'Turiu vaikiną', de: 'Ich habe einen Freund', ph: 'tu-RJU wai-KI-na', tip: '„vaikinas“ = (fester) Freund. Klare Ansage, also freundlich bleiben und gehen.' },
+      { group: 'Charmant rausgehen', lt: 'Gerai, gero vakaro!', de: 'Okay, schönen Abend noch!', ph: 'gä-RAI, GÄ-ro WA-ka-ro', tip: '„Gerai“ und „gero“ kennst du schon. „vakaras“ = Abend. Lächeln, gehen, fertig.' }
+    ],
+    dialog: {
+      scene: 'Freitagabend in einer Bar in Vilnius. Eine Frau steht allein an der Theke und lächelt dir zu.',
+      steps: [
+        { narr: 'Du gehst zu ihr rüber.', ask: 'Was sagst du zuerst?',
+          options: [['Labas! Kaip tave vardu?', 'Hallo! Wie heißt du?'], ['Sąskaitą, prašau.', 'Die Rechnung, bitte.'], ['Kur yra tualetas?', 'Wo ist die Toilette?']], answer: 0,
+          fb: 'Locker mit „Labas“ und direkt nach dem Namen fragen. Perfekt.' },
+        { who: 'Rūta', lt: 'Labas! Mano vardas Rūta. O tavo?', de: 'Hallo! Ich heiße Rūta. Und du?', ask: 'Du stellst dich vor:',
+          options: [['Mano vardas Laurin.', 'Ich heiße Laurin.'], ['Ne, ačiū.', 'Nein, danke.'], ['Turiu vaikiną.', 'Ich habe einen Freund.']], answer: 0 },
+        { who: 'Rūta', lt: 'Labas, Laurin!', de: 'Hallo, Laurin!', ask: 'Du sagst, dass es dich freut:',
+          options: [['Malonu susipažinti!', 'Freut mich, dich kennenzulernen!'], ['Viso gero!', 'Auf Wiedersehen!'], ['Nesuprantu.', 'Ich verstehe nicht.']], answer: 0 },
+        { who: 'Rūta', lt: 'Man taip pat malonu!', de: 'Freut mich auch!', ask: 'Du willst wissen, ob sie von hier ist:',
+          options: [['Ar tu iš čia?', 'Bist du von hier?'], ['Ar nori šokti?', 'Möchtest du tanzen?'], ['Kiek kainuoja?', 'Was kostet das?']], answer: 0 },
+        { who: 'Rūta', lt: 'Taip, iš Vilniaus. O tu?', de: 'Ja, aus Vilnius. Und du?', ask: 'Du antwortest:',
+          options: [['Aš iš Vokietijos.', 'Ich bin aus Deutschland.'], ['Ar tu iš čia?', 'Bist du von hier?'], ['Mano vardas Laurin.', 'Ich heiße Laurin.']], answer: 0 },
+        { who: 'Rūta', lt: 'O, tu kalbi lietuviškai?', de: 'Oh, du sprichst Litauisch?', ask: 'Zeit für den Eisbrecher:',
+          options: [['Mano lietuvių kalba labai bloga 😅', 'Mein Litauisch ist sehr schlecht.'], ['Taip, mielai!', 'Ja, gerne!'], ['Gal susitiksim rytoj?', 'Treffen wir uns morgen?']], answer: 0,
+          fb: 'Sie lacht. Ab jetzt dürft ihr ruhig auf Englisch weiterreden.' },
+        { who: 'Rūta', lt: 'Haha, ne, labai gerai!', de: 'Haha, nein, sehr gut!', ask: 'Sie lacht. Ein Kompliment passt jetzt:',
+          options: [['Tu turi gražią šypseną.', 'Du hast ein schönes Lächeln.'], ['Turiu vaikiną.', 'Ich habe einen Freund.'], ['Sąskaitą, prašau.', 'Die Rechnung, bitte.']], answer: 0 },
+        { who: 'Rūta', lt: 'Ačiū! 😊', de: 'Danke!', ask: 'Ihr Glas ist leer. Du fragst:',
+          options: [['Ar galiu tau nupirkti gėrimą?', 'Darf ich dir einen Drink ausgeben?'], ['Ar galiu mokėti kortele?', 'Kann ich mit Karte zahlen?'], ['Kiek kainuoja?', 'Was kostet das?']], answer: 0 },
+        { who: 'Rūta', lt: 'Taip, mielai!', de: 'Ja, gerne!', ask: 'Was hat sie gesagt?', mode: 'de',
+          options: [['Ja, gerne!', ''], ['Nein, danke.', ''], ['Ich habe einen Freund.', '']], answer: 0 },
+        { narr: 'Die Drinks kommen. Ihr hebt die Gläser.', ask: 'Du sagst:',
+          options: [['Į sveikatą!', 'Prost!'], ['Atsiprašau!', 'Entschuldigung!'], ['Gerai, gero vakaro!', 'Okay, schönen Abend noch!']], answer: 0 },
+        { narr: 'Die Musik wird besser.', ask: 'Du fragst sie:',
+          options: [['Ar nori šokti?', 'Möchtest du tanzen?'], ['Ar kalbate angliškai?', 'Sprechen Sie Englisch?'], ['Kur yra tualetas?', 'Wo ist die Toilette?']], answer: 0 },
+        { who: 'Rūta', lt: 'Taip, mielai!', de: 'Ja, gerne!', narrAfter: 'Ihr tanzt. Später am Abend …', ask: 'Du willst in Kontakt bleiben:',
+          options: [['Koks tavo Instagramas?', 'Was ist dein Instagram?'], ['Kaip tave vardu?', 'Wie heißt du?'], ['Iki!', 'Tschüss!']], answer: 0 },
+        { who: 'Rūta', lt: 'Štai, @ruta.vilnius 📱', de: 'Hier, @ruta.vilnius', ask: 'Du fliegst übermorgen. Du fragst:',
+          options: [['Gal susitiksim rytoj?', 'Treffen wir uns morgen?'], ['Tu labai graži.', 'Du bist sehr hübsch.'], ['Viso gero!', 'Auf Wiedersehen!']], answer: 0 },
+        { who: 'Rūta', lt: 'Taip, mielai! Iki rytoj!', de: 'Ja, gerne! Bis morgen!', narrAfter: 'Plan B, für die Übung: Ein anderer Abend, eine andere Bar. Du fragst eine Frau, ob du ihr einen Drink ausgeben darfst.', ask: 'Läuft! 🎉 Wie verabschiedest du dich für heute?',
+          options: [['Iki!', 'Tschüss!'], ['Ne, ačiū.', 'Nein, danke.'], ['Nesuprantu.', 'Ich verstehe nicht.']], answer: 0 },
+        { who: 'Frau', lt: 'Ne, ačiū. Turiu vaikiną.', de: 'Nein, danke. Ich habe einen Freund.', hideDe: true, ask: 'Was hat sie gesagt?', mode: 'de',
+          options: [['Nein, danke. Ich habe einen Freund.', ''], ['Ja, gerne!', ''], ['Ich bin aus Vilnius.', '']], answer: 0 },
+        { ask: 'Du lächelst und gehst charmant raus:',
+          options: [['Gerai, gero vakaro!', 'Okay, schönen Abend noch!'], ['Gal susitiksim rytoj?', 'Treffen wir uns morgen?'], ['Tu labai graži.', 'Du bist sehr hübsch.']], answer: 0,
+          fb: 'Souverän. Lächeln, „Gero vakaro!“ und weiter.' }
+      ]
+    }
+  }
+];
+
+const CORE = LESSONS.filter(l => !l.bonus);
+
+/* ---------- Speicher ---------- */
+
+const KEY = 'litauisch-1h-v1';
+let state = { done: {}, exam: null };
+try {
+  const raw = localStorage.getItem(KEY);
+  if (raw) state = Object.assign(state, JSON.parse(raw));
+} catch (e) { /* privater Modus o. Ä.: ohne Speichern weiter */ }
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignorieren */ }
+}
+
+/* ---------- Helfer ---------- */
+
+const app = document.getElementById('app');
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') n.className = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) n.append(c.nodeType ? c : String(c));
+  return n;
+}
+function shuffle(a) {
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function render(...nodes) { app.replaceChildren(...nodes.flat().filter(Boolean)); window.scrollTo(0, 0); }
+const doneCount = () => CORE.filter(l => state.done[l.id]).length;
+const unlocked = (l) => l.bonus || l.id === 1 || !!state.done[l.id - 1];
+
+function updateProgress(current) {
+  const c = doneCount();
+  let label;
+  if (current && current.bonus) label = 'Bonus-Lektion 🍸';
+  else if (current === 'exam') label = 'Abschlussprüfung';
+  else if (current) label = `Lektion ${current.id} von 6`;
+  else label = c >= 6 ? 'Alle 6 Lektionen geschafft 🎉' : `Lektion ${c + 1} von 6`;
+  document.getElementById('progress-text').textContent = label;
+  document.getElementById('progress-count').textContent = `${c}/6 erledigt`;
+  document.getElementById('bar-fill').style.width = (c / 6 * 100) + '%';
+  document.getElementById('bar').setAttribute('aria-valuenow', c);
+}
+
+/* ---------- Tabs ---------- */
+
+const tabCourse = document.getElementById('tab-course');
+const tabCheat = document.getElementById('tab-cheat');
+function setTab(which) {
+  tabCourse.setAttribute('aria-selected', which === 'course');
+  tabCheat.setAttribute('aria-selected', which === 'cheat');
+}
+tabCourse.onclick = () => showHome();
+tabCheat.onclick = () => showCheat();
+
+/* ---------- Startseite ---------- */
+
+function showHome() {
+  setTab('course');
+  updateProgress(null);
+  const list = el('div', { class: 'lesson-list' });
+  for (const l of CORE) {
+    const open = unlocked(l), done = state.done[l.id];
+    list.append(el('button', {
+      class: 'lesson' + (open ? '' : ' locked') + (done ? ' done' : ''),
+      disabled: !open, onclick: () => startLesson(l)
+    },
+      el('span', { class: 'em' }, l.emoji),
+      el('span', { class: 't' }, `${l.id}. ${l.title}`, el('small', null, `${l.items.length} Sätze · ca. 10 Min.`)),
+      el('span', { class: 'st', 'aria-label': done ? 'erledigt' : open ? 'offen' : 'gesperrt' }, done ? '✅' : open ? '▶️' : '🔒')
+    ));
+  }
+  const examOpen = !!state.done[6];
+  list.append(el('button', {
+    class: 'lesson' + (examOpen ? '' : ' locked') + (state.exam ? ' done' : ''),
+    disabled: !examOpen, onclick: () => startExam()
+  },
+    el('span', { class: 'em' }, '🏁'),
+    el('span', { class: 't' }, 'Abschlussprüfung',
+      el('small', null, state.exam ? `Bestanden · ${state.exam.first} von ${state.exam.total} beim ersten Versuch` : 'Alle Sätze aus Lektion 1–6')),
+    el('span', { class: 'st' }, state.exam ? '🏆' : examOpen ? '▶️' : '🔒')
+  ));
+
+  const b = LESSONS.find(l => l.bonus);
+  const bonus = el('button', { class: 'lesson bonus' + (state.done[b.id] ? ' done' : ''), onclick: () => startLesson(b) },
+    el('span', { class: 'em' }, b.emoji),
+    el('span', { class: 't' }, `Lektion ${b.id}: ${b.title}`, el('small', null, 'Bonus · sofort freigeschaltet')),
+    el('span', { class: 'st' }, state.done[b.id] ? '✅' : '▶️')
+  );
+
+  render(
+    el('p', { class: 'muted small', style: 'margin-top:0' }, 'Jede Lektion: 1 Lernen → 2 Üben → 3 Mini-Dialog. Die nächste wird frei, sobald du die vorige geschafft hast.'),
+    list,
+    el('div', { class: 'section-h' }, 'Bonus'),
+    bonus
+  );
+}
+
+/* ---------- Lektion ---------- */
+
+function lessonFrame(l, step, body) {
+  const names = ['Lernen', 'Üben', 'Dialog'];
+  return [
+    el('div', { class: 'lesson-head' },
+      el('button', { class: 'back', onclick: showHome }, '← Kurs'),
+      el('h2', null, `${l.emoji} ${l.title}`)),
+    el('div', { class: 'steps' }, names.map((n, i) =>
+      el('span', { class: i === step ? 'on' : i < step ? 'past' : '' }, `${i + 1} ${n}`))),
+    ...body
+  ];
+}
+
+function startLesson(l) {
+  setTab('course');
+  updateProgress(l);
+  learn(l, 0);
+}
+
+function learn(l, i) {
+  const it = l.items[i];
+  let flipped = false;
+  const card = el('div', { class: 'card', role: 'button', tabindex: '0', 'aria-label': 'Karte umdrehen' });
+  const next = el('button', { class: 'btn', disabled: true }, i < l.items.length - 1 ? 'Nächste Karte' : 'Weiter zum Üben');
+  function draw() {
+    card.replaceChildren(...[
+      it.group ? el('div', { class: 'tag' }, it.group + (it.understand ? ' · nur verstehen' : '')) : null,
+      el('div', { class: 'de' }, it.de),
+      flipped
+        ? [el('div', { class: 'lt' }, it.lt), el('div', { class: 'ph' }, '🗣 ' + it.ph), el('div', { class: 'tip' }, '💡 ' + it.tip)]
+        : el('div', { class: 'hint' }, 'Wie heißt das auf Litauisch? Erst überlegen, dann antippen.')
+    ].flat().filter(Boolean));
+  }
+  function flip() { flipped = !flipped; next.disabled = false; draw(); }
+  card.onclick = flip;
+  card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } };
+  next.onclick = () => (i < l.items.length - 1 ? learn(l, i + 1) : practice(l));
+  draw();
+  render(...lessonFrame(l, 0, [
+    card,
+    el('p', { class: 'counter' }, `Karte ${i + 1} von ${l.items.length}`),
+    el('div', { class: 'row' },
+      el('button', { class: 'btn secondary', disabled: i === 0, onclick: () => learn(l, i - 1) }, '← Zurück'),
+      next)
+  ]));
+}
+
+// Fragenliste: jeder Satz in beide Richtungen (nur-verstehen-Sätze nur LT→DE)
+function buildQuestions(items, oneDirection) {
+  const qs = [];
+  for (const it of items) {
+    const dirs = it.understand ? ['lt'] : ['de', 'lt'];
+    if (oneDirection) qs.push({ it, from: it.understand ? 'lt' : dirs[Math.floor(Math.random() * 2)] });
+    else for (const d of dirs) qs.push({ it, from: d });
+  }
+  return shuffle(qs);
+}
+
+function optionsFor(q, pool) {
+  const key = q.from === 'de' ? 'lt' : 'de';
+  const others = shuffle(pool.filter(x => x !== q.it && x[key] !== q.it[key]));
+  const seen = new Set([q.it[key]]);
+  const picks = [];
+  for (const o of others) { if (!seen.has(o[key])) { seen.add(o[key]); picks.push(o); } if (picks.length === 3) break; }
+  return shuffle([q.it, ...picks]);
+}
+
+const ALL_ITEMS = LESSONS.flatMap(l => l.items);
+
+// Gemeinsamer Quiz-Ablauf: falsche Antworten kommen ans Ende der Schlange zurück.
+function quiz({ questions, pool, frame, onDone }) {
+  const queue = questions.slice();
+  const missed = new Set();
+  const total = questions.length;
+  let first = 0;
+  function ask() {
+    if (!queue.length) return onDone({ first, total });
+    const q = queue.shift();
+    const key = q.from === 'de' ? 'lt' : 'de';
+    let localPool = pool.length >= 4 ? pool : ALL_ITEMS;
+    if (localPool.filter(x => x[key] !== q.it[key]).length < 3) localPool = ALL_ITEMS;
+    const opts = optionsFor(q, localPool);
+    const fb = el('div');
+    const nextBtn = el('button', { class: 'btn', style: 'display:none' }, 'Weiter');
+    nextBtn.onclick = ask;
+    const btns = opts.map(o => el('button', { class: 'opt' }, o[key]));
+    btns.forEach((b, idx) => b.onclick = () => {
+      const ok = opts[idx] === q.it;
+      btns.forEach(x => x.disabled = true);
+      btns[opts.indexOf(q.it)].classList.add('right');
+      if (ok) {
+        if (!missed.has(q)) first++;
+        fb.replaceChildren(el('div', { class: 'feedback ok' }, '✓ Richtig! ', el('b', null, q.it.lt), ' · 🗣 ' + q.it.ph));
+      } else {
+        b.classList.add('wrong', 'shake');
+        missed.add(q);
+        queue.push(q);
+        fb.replaceChildren(el('div', { class: 'feedback bad' }, '✗ Richtig ist: ', el('b', null, q.it[key]),
+          el('br'), '🗣 ' + q.it.ph, el('br'), '💡 ' + q.it.tip, el('br'), el('small', null, 'Diese Frage kommt gleich noch einmal.')));
+      }
+      nextBtn.style.display = '';
+      nextBtn.focus({ preventScroll: true });
+    });
+    render(...frame([
+      el('div', { class: 'q' },
+        el('div', { class: 'ask' }, q.from === 'de' ? 'Wie sagt man auf Litauisch?' : 'Was bedeutet das?'),
+        el('div', { class: 'term' }, q.from === 'de' ? q.it.de : q.it.lt)),
+      el('div', { class: 'opts' }, btns),
+      fb, nextBtn,
+      el('p', { class: 'counter' }, `Noch ${queue.length + 1} ${queue.length ? 'Fragen' : 'Frage'} · falsche kommen wieder`)
+    ]));
+  }
+  ask();
+}
+
+function practice(l) {
+  quiz({
+    questions: buildQuestions(l.items, false),
+    pool: l.items,
+    frame: (body) => lessonFrame(l, 1, body),
+    onDone: () => {
+      render(...lessonFrame(l, 1, [
+        el('div', { class: 'done-box' }, el('div', { class: 'big' }, '💪'),
+          el('h2', null, 'Alles sitzt!'),
+          el('p', { class: 'muted' }, 'Jetzt im Mini-Dialog anwenden.')),
+        el('button', { class: 'btn', onclick: () => dialog(l, 0, []) }, 'Zum Mini-Dialog')
+      ]));
+    }
+  });
+}
+
+function dialog(l, i, log) {
+  const steps = l.dialog.steps;
+  if (i >= steps.length) return finishLesson(l);
+  const s = steps[i];
+  const chat = el('div', { class: 'chat' }, log.map(x => x.cloneNode(true)));
+  const added = [];
+  if (s.narr) added.push(el('div', { class: 'narr' }, s.narr));
+  if (s.lt) added.push(el('div', { class: 'bubble them' }, el('span', { class: 'who' }, s.who), s.lt,
+    s.hideDe || s.mode === 'de' ? null : el('small', null, s.de)));
+  chat.append(...added);
+
+  const opts = shuffle(s.options.map((o, idx) => ({ o, ok: idx === s.answer })));
+  const fb = el('div');
+  const nextBtn = el('button', { class: 'btn', style: 'display:none' }, i < steps.length - 1 ? 'Weiter' : 'Lektion abschließen');
+  const btns = opts.map(({ o }) => el('button', { class: 'opt' }, o[0]));
+  btns.forEach((b, idx) => b.onclick = () => {
+    if (opts[idx].ok) {
+      btns.forEach(x => x.disabled = true);
+      b.classList.add('right');
+      const right = s.options[s.answer];
+      if (s.mode !== 'de' && right[1]) b.append(el('small', null, right[1]));
+      fb.replaceChildren(el('div', { class: 'feedback ok' }, '✓ ' + (s.fb || 'Genau!'),
+        s.hideDe ? [el('br'), el('small', null, `„${s.lt}“ = ${s.de}`)] : null));
+      const newLog = log.concat(added);
+      if (s.lt && s.hideDe) {
+        // Übersetzung der versteckten Zeile im Verlauf nachreichen
+        const bubble = added[added.length - 1];
+        bubble.append(el('small', null, s.de));
+      }
+      if (s.mode !== 'de') newLog.push(el('div', { class: 'bubble me' }, right[0], el('small', null, right[1])));
+      if (s.narrAfter) newLog.push(el('div', { class: 'narr' }, s.narrAfter));
+      nextBtn.onclick = () => dialog(l, i + 1, newLog);
+      nextBtn.style.display = '';
+      nextBtn.focus({ preventScroll: true });
+    } else {
+      b.disabled = true;
+      b.classList.add('wrong', 'shake');
+      const wrong = opts[idx].o;
+      fb.replaceChildren(el('div', { class: 'feedback bad' }, '✗ Passt nicht',
+        wrong[1] ? ` („${wrong[0]}“ heißt „${wrong[1]}“)` : '', '. Versuch es noch einmal.'));
+    }
+  });
+
+  render(...lessonFrame(l, 2, [
+    el('div', { class: 'scene' }, '🎬 ' + l.dialog.scene),
+    chat,
+    el('div', { class: 'q', style: 'margin-top:12px' }, el('div', { class: 'ask' }, s.ask)),
+    el('div', { class: 'opts' }, btns),
+    fb, nextBtn,
+    el('p', { class: 'counter' }, `Szene ${i + 1} von ${steps.length}`)
+  ]));
+  // Neueste Zeilen sichtbar machen
+  requestAnimationFrame(() => { const last = chat.lastElementChild; if (last) last.scrollIntoView({ block: 'center' }); });
+}
+
+function finishLesson(l) {
+  state.done[l.id] = true;
+  save();
+  updateProgress(l.bonus ? l : null);
+  const nextL = l.bonus ? null : CORE.find(x => x.id === l.id + 1);
+  render(
+    el('div', { class: 'done-box' },
+      el('div', { class: 'big' }, l.bonus ? '🍸' : '🎉'),
+      el('h2', null, `Lektion ${l.id} geschafft!`),
+      el('p', { class: 'muted' }, l.bonus ? 'Viel Glück in der Bar. Und denk dran: Lächeln ist die halbe Miete.'
+        : nextL ? `Lektion ${nextL.id} ist jetzt freigeschaltet.` : 'Alle Lektionen erledigt. Jetzt die Abschlussprüfung!')),
+    nextL ? el('button', { class: 'btn', onclick: () => startLesson(nextL) }, `Weiter mit Lektion ${nextL.id}`) : null,
+    !l.bonus && !nextL ? el('button', { class: 'btn', onclick: startExam }, 'Zur Abschlussprüfung') : null,
+    el('button', { class: 'btn secondary', onclick: showHome }, 'Zur Übersicht')
+  );
+}
+
+/* ---------- Abschlussprüfung ---------- */
+
+function startExam() {
+  setTab('course');
+  updateProgress('exam');
+  const items = CORE.flatMap(l => l.items);
+  const frame = (body) => [
+    el('div', { class: 'lesson-head' },
+      el('button', { class: 'back', onclick: showHome }, '← Kurs'),
+      el('h2', null, '🏁 Abschlussprüfung')),
+    ...body
+  ];
+  quiz({
+    questions: buildQuestions(items, true),
+    pool: items,
+    frame,
+    onDone: ({ first, total }) => {
+      state.exam = { first, total };
+      save();
+      updateProgress(null);
+      render(
+        el('div', { class: 'done-box' }, el('div', { class: 'big' }, '🏆'),
+          el('h2', null, 'Prüfung bestanden!'),
+          el('p', null, `${first} von ${total} beim ersten Versuch richtig.`),
+          el('p', { class: 'muted' }, 'Du bist bereit für Litauen. Gero kelio! (Gute Reise!)')),
+        el('button', { class: 'btn', onclick: showCheat }, 'Zum Spickzettel'),
+        el('button', { class: 'btn secondary', onclick: showHome }, 'Zur Übersicht')
+      );
+    }
+  });
+}
+
+/* ---------- Spickzettel ---------- */
+
+function phrase(it) {
+  return el('div', { class: 'phrase' + (it.understand ? ' understand' : '') },
+    el('div', { class: 'l' }, it.lt),
+    el('div', { class: 'p' }, '🗣 ' + it.ph),
+    el('div', { class: 'd' }, it.de));
+}
+
+function showCheat() {
+  setTab('cheat');
+  updateProgress(null);
+  const rules = [
+    ['š', 'sch'], ['ž', 'j wie in „Journal“'], ['č', 'tsch'], ['c', 'z'],
+    ['v', 'w'], ['y', 'langes i'], ['ė', 'langes e'], ['ie', '„je“'], ['uo', '„u-o“']
+  ];
+  const parts = [
+    el('div', { class: 'rules' },
+      el('h2', null, '🗣 Aussprache'),
+      el('ul', null, rules.map(([a, b]) => el('li', null, el('b', null, a), ' = ', b)),
+        el('li', { class: 'wide' }, el('b', null, 'GROSS'), ' = betonte Silbe')),
+      el('div', { class: 'tipbox' }, '💡 ', el('b', null, 'Laba diena'), ' + ', el('b', null, 'Ar kalbate angliškai?'), ' + ', el('b', null, 'Ačiū'),
+        ' bringt dich überall durch. Jüngere Leute und Hotels sprechen fast immer Englisch.'))
+  ];
+  for (const l of CORE) {
+    parts.push(el('h2', null, `${l.emoji} ${l.id}. ${l.title}`), ...l.items.map(phrase));
+  }
+  const b = LESSONS.find(l => l.bonus);
+  parts.push(el('h2', null, `${b.emoji} Bonus: ${b.title}`));
+  let group = null;
+  for (const it of b.items) {
+    if (it.group !== group) {
+      group = it.group;
+      parts.push(el('div', { class: 'sub' }, group + (it.understand ? ' (nur verstehen)' : '')));
+    }
+    parts.push(phrase(it));
+  }
+  parts.push(el('div', { class: 'tipbox' }, '💡 Erst „Mano lietuvių kalba labai bloga 😅“, dann ruhig auf Englisch weiter. Bei „Ne, ačiū“: lächeln, „Gero vakaro!“ und weitergehen.'));
+  render(el('div', { class: 'cheat' }, parts));
+}
+
+/* ---------- Zurücksetzen ---------- */
+
+document.getElementById('reset').onclick = () => {
+  if (!confirm('Gesamten Fortschritt löschen?')) return;
+  state = { done: {}, exam: null };
+  try { localStorage.removeItem(KEY); } catch (e) { /* ignorieren */ }
+  showHome();
+};
+
+/* ---------- Offline / Service Worker ---------- */
+
+const statusEl = document.getElementById('offline-status');
+async function checkOffline() {
+  try {
+    if (!('caches' in window)) return;
+    const keys = await caches.keys();
+    for (const k of keys) {
+      if (!k.startsWith('litauisch-')) continue;
+      const c = await caches.open(k);
+      if (await c.match('./index.html')) {
+        statusEl.replaceChildren(el('span', { class: 'ok' }, '✓ Offline verfügbar'));
+        return true;
+      }
+    }
+  } catch (e) { /* ignorieren */ }
+  return false;
+}
+if ('serviceWorker' in navigator) {
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').then(async () => {
+    await navigator.serviceWorker.ready;
+    for (let n = 0; n < 20 && !(await checkOffline()); n++) await new Promise(r => setTimeout(r, 500));
+  }).catch(() => { statusEl.textContent = 'Offline-Modus nicht verfügbar (Browser unterstützt es nicht).'; });
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    checkOffline();
+    if (!hadController) return;
+    if (document.querySelector('.update')) return;
+    document.body.append(el('button', { class: 'update', onclick: () => location.reload() },
+      '✨ Neue Version geladen (z. B. Bonus-Lektion). Tippe zum Aktualisieren.'));
+  });
+} else {
+  statusEl.textContent = 'Offline-Modus nicht verfügbar (Browser unterstützt es nicht).';
+}
+
+showHome();
+</script>
+</body>
+</html>
